@@ -1,7 +1,7 @@
 import pygame
-import player
-import asteroid
-import asteroidfield
+from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 from constants import *
 
 def main():
@@ -13,18 +13,19 @@ def main():
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
 
-    asteroidfield.AsteroidField.containers = (updateable)
+    AsteroidField.containers = (updateable)
     
     # adds all Asteroid methods to the asteriods, updateable and drawab;e groups
-    asteroid.Asteroid.containers = (asteroids, updateable, drawable)
+    Asteroid.containers = (asteroids, updateable, drawable)
 
     # adds all Player method's to the updateable and drawable groups
-    player.Player.containers = (updateable, drawable)
+    Player.containers = (updateable, drawable)
 
-    # has player start in the center of the screen
-    player.Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    # creates a player object in the center of the screen
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
-    asteroidfield.AsteroidField()
+    # creates a AstriodField object that spawns Asteriods around the edge of the screen
+    asteroidfield = AsteroidField()
 
     game_clock = pygame.time.Clock()
     fps = 60
@@ -39,6 +40,11 @@ def main():
 
         # updates everything in updateable group
         updateable.update(dt)
+
+        for a in asteroids:
+            if a.collision(player):
+                print("Game Over!")
+                raise SystemExit
 
         # draws a black screen
         screen.fill((0, 0, 0))
