@@ -49,6 +49,12 @@ def main():
             if a.collision(player):
                 print("Game Over!")
                 raise SystemExit
+            
+        for a in asteroids:
+            for bullet in shots:
+                if a.collision(bullet):
+                    a.kill()
+                    bullet.kill()
 
         # draws a black screen
         screen.fill((0, 0, 0))
